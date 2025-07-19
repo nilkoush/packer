@@ -1,0 +1,15 @@
+items_example_item:
+  texture: "example:texture"
+items_example_parent_item:
+  parent_model: "example:parent_model"
+  texture: "example:texture"
+items_example_model:
+  model: "example:model"
+items_dyeable_texture:
+  texture: "example:texture"
+  dyeable: true
+cmd_example_item:
+  texture: "example:texture"
+  material: "echo_shard"
+  custom_model_data:
+    strings: ["example_string"]

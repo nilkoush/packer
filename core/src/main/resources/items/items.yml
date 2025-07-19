@@ -1,0 +1,10 @@
+example_item:
+  texture: "example:texture"
+example_parent_item:
+  parent_model: "example:parent_model"
+  texture: "example:texture"
+example_model:
+  model: "example:model"
+dyeable_texture:
+  texture: "example:texture"
+  dyeable: true
