@@ -15,7 +15,6 @@ dependencies {
     compileOnly("org.purpurmc.purpur:purpur-api:1.21.5-R0.1-SNAPSHOT")
     implementation("dev.nilkoush:thelibrary-paper:2.0.0-SNAPSHOT")
     implementation(project(":packer-core"))
-    compileOnly("com.nexomc:nexo:1.8.0")
 }
 
 paper {
