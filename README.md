@@ -47,4 +47,5 @@ items_dyeable_texture:
 
 ## Commands (if you use plugin on the server)
 ```/pack generate - Generates packer.zip from the configuration files in /items.```
+
 ```/pack items <category> - Opens menu with the specified category```
