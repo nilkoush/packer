@@ -12,10 +12,12 @@ import java.nio.file.StandardCopyOption;
 public class PackerApp {
 
     public static void main(String[] args) {
-        saveResource("items/items.yml");
         String currentDir = System.getProperty("user.dir");
         Path targetDir = Paths.get(currentDir, "Packer");
-        new File(targetDir.toFile(), "pack").mkdirs();
+        if (!targetDir.toFile().exists()) {
+            saveResource("items/items.yml");
+            new File(targetDir.toFile(), "pack").mkdirs();
+        }
         PackManager.getInstance().generate(targetDir);
         JOptionPane.showMessageDialog(
                 null,

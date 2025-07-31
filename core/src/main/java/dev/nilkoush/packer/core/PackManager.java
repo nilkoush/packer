@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import net.kyori.adventure.key.Key;
 import team.unnamed.creative.ResourcePack;
+import team.unnamed.creative.atlas.Atlas;
+import team.unnamed.creative.atlas.AtlasSource;
 import team.unnamed.creative.base.Writable;
 import team.unnamed.creative.model.Model;
 import team.unnamed.creative.model.ModelTexture;
@@ -30,13 +32,16 @@ public class PackManager {
 
     public void generate(Path basePath) {
         ResourcePack resourcePack = ResourcePack.resourcePack();
+        resourcePack.packMeta(46, "Packer");
 
-        try (Stream<Path> paths = Files.walk(basePath.resolve("pack"))) {
-            paths.filter(Files::isRegularFile)
+        Path packPath = basePath.resolve("pack");
+        try (Stream<Path> paths = Files.walk(packPath)) {
+            paths
+                    .filter(Files::isRegularFile)
                     .forEach(path -> {
                         File file = path.toFile();
 
-                        Path relativePath = basePath.relativize(path);
+                        Path relativePath = packPath.relativize(path);
                         String relativePathStr = relativePath.toString().replace("\\", "/");
 
                         resourcePack.unknownFile(relativePathStr, Writable.file(file));
@@ -44,6 +49,37 @@ public class PackManager {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        Atlas.Builder atlas = Atlas.atlas().key(Atlas.BLOCKS);
+        Path assetsPath = packPath.resolve("assets");
+        try (Stream<Path> paths = Files.walk(assetsPath, 3)) {
+            paths.filter(Files::isDirectory)
+                    .filter(path -> path.getNameCount() >= 3)
+                    .filter(path -> path.getName(path.getNameCount() - 1).toString().equals("textures"))
+                    .forEach(texturesPath -> {
+                        String namespace = texturesPath.getName(texturesPath.getNameCount() - 2).toString(); // assets/<namespace>/textures
+                        try (Stream<Path> textureFiles = Files.walk(texturesPath)) {
+                            textureFiles
+                                    .filter(Files::isRegularFile)
+                                    .filter(path -> path.toString().endsWith(".png"))
+                                    .forEach(filePath -> {
+                                        Path relativeToTextures = texturesPath.relativize(filePath);
+                                        String texture = relativeToTextures.toString()
+                                                .replace("\\", "/")
+                                                .replaceAll("\\.[^.]+$", "");
+                                        Key key = Key.key(namespace, texture);
+                                        System.out.println(key);
+                                        AtlasSource atlasSource = AtlasSource.single(key);
+                                        atlas.addSource(atlasSource).build();
+                                    });
+                        } catch (IOException e) {
+                            throw new RuntimeException("Error processing textures in: " + texturesPath, e);
+                        }
+                    });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        resourcePack.atlas(atlas.build());
 
         Path itemsPath = basePath.resolve("items");
         try {

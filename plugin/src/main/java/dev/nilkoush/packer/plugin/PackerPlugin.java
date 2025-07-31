@@ -2,6 +2,7 @@ package dev.nilkoush.packer.plugin;
 
 import dev.nilkoush.packer.plugin.commands.PackerCommand;
 import dev.nilkoush.thelibrary.paper.TheLibrary;
+import dev.nilkoush.thelibrary.paper.format.FormatUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,7 +21,7 @@ public class PackerPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         TheLibrary.onEnable();
-        TheLibrary.setGlobalReplacements(Map.of(
+        FormatUtil.setGlobalReplacements(Map.of(
                 "prefix", "<primary>Packer <light>•",
                 "primary", "<#12ADF5>",
                 "secondary", "<#5ec5f5>",
